@@ -1,14 +1,175 @@
 import os
 
-from dotenv import load_dotenv  # pyright: ignore[reportMissingImports]
+from dotenv import load_dotenv  
+from langchain_openai import ChatOpenAI  
+from langchain_core.prompts import PromptTemplate   
+from langchain_ollama import ChatOllama
+
 
 load_dotenv()
 
 
 def main():
     print("Hello from langchain-course!")
-    print(os.getenv("OPENAI_API_KEY"))
+    information = """
+    Rollo Reece May (April 21, 1909 – October 22, 1994) was an American existential psychologist and author of the influential book Love and Will (1969). He is often associated with humanistic psychology and existentialist philosophy, and alongside Viktor Frankl, was a major proponent of existential psychotherapy. The philosopher and theologian Paul Tillich was a close friend who had a significant influence on his work.[1][2]
 
+May's other works include The Meaning of Anxiety (1950, revised 1977) and The Courage to Create (1975), named after Tillich's The Courage to Be.[3]
+
+Early life
+Reese May, otherwise known as 'Rollo' May, was born in Ada, Ohio, on April 21, 1909 to Matie Boughton and Earl Tittle May, a Men's Christian Associations Field Secretary, as the first son and the second eldest of six.[4]
+
+His namesake 'Rollo', or, as his Mother called him, 'Little Rollo', was the title character from a series of children's' books.[5] written by Jacob Abbott in the 19th century.[6] Rollo was reported to have an intense dislike for this nickname; however, he made his peace with the moniker after learning about Rollo the Conqueror, a tenth century Norman.[5]
+
+Some may describe Rollo's childhood as difficult due to the divorce of his parents and to his oldest sister's struggle with mental health that resulted in frequent hospitalizations.[6] His mother often left the children alone, and with his sister suffering from schizophrenia, he bore much of the burden.[7] At Michigan State University he majored in English, but was expelled due to his involvement in a radical student magazine. After that, he attended Oberlin College and received a bachelor's degree in English. He spent three years teaching in Greece at Anatolia College. During this time, he studied with doctor and psychotherapist Alfred Adler, with whom his later work shares theoretical similarities. He was ordained as a minister shortly after coming back to the United States, but left the ministry after several years to pursue a degree in psychology. He was diagnosed with tuberculosis in 1942 and spent 18 months in a sanatorium. He later attended Union Theological Seminary for a BD during 1938, and Teachers College, Columbia University for a PhD in clinical psychology in 1949. May was a founder and faculty member of Saybrook Graduate School and Research Center in San Francisco.[8]
+
+He spent the final years of his life in Tiburon on San Francisco Bay. May died of congestive heart failure at the age of 85,[9] attended by his wife, Georgia, and friends.[7]
+
+Earlier years (1940s–1950s)
+When beginning his first books, May's topics focused on more practical uses regarding patients and mental health. His first book, The Art of Counseling (1939)[10] talks about his experience of counseling. Some of the topics he looks at are empathy, religion, personality problems and mental health. May also gives his perspective on these and also discusses how to handle those particular types of issues should a counselor encounter them (May 1965). He followed with a more theoretical book, The Springs of Creative Living: A Study of Human Nature and God (1940) presenting a personality theory influenced by critiquing the work of others, including Freud and Adler. He claims that personality is deeper than they presented. This is also where May introduces his own meaning for different terms such as libido from Freudian Psychology (May, 1940).
+
+His writings were interrupted in the 1940s due to being diagnosed with tuberculosis and having to work on his PhD.
+
+His later books in the 1950s all focus on mental health. The Meaning of Anxiety (1950) explores anxiety and how it can affect mental health. May also discusses how he believes that experiencing anxiety can aid development and how dealing with it appropriately can lead to having a healthy personality. In Man’s Search for Himself (1953), May talks about his experience with his patients and the recurring problems they had in common such as loneliness and emptiness. May looks deeper into this and discusses how humans have an innate need for a sense of value and also how life can often present an overwhelming sense of anxiety. May also gives signposts on how to act during these periods. (May, 1953). May's final writing in the 1950s Existence (1958) is not entirely by May, but he examines the roots of Existential Psychology and why Existential Psychology is important in understanding a gap in human understanding of the nature of existence. He also talks about the Existential Psychotherapy and the contributions it has made. (May, Ernest, Ellenberger & Aronson, 1958)
+
+Psychology and the Human Dilemma (1967)[11]
+May uses this book to reflect on a lot of both his ideas so far and those of other thinkers and also mentions some contemporary ideas despite the book's publication date. May also expands on some of his previous perspectives such as anxiety and people's feelings of insignificance (May, 1967).
+
+Love and Will (1969)[12]
+One of May's most influential books. He talks about his perspective on love and the Daimonic; how it is part of nature and not the superego. May also discusses how love and sex are in conflict with each other and how they are two different things. May also discusses depression and creativity towards the end. Some of the views in this book are the ones that May is best known for (May, 1969).
+
+Power and Innocence: A Search for the Sources of Violence (1972)[13]
+May uses this book to start some new ideas and also define words according to his way of thinking; such as power and physical courage and how power holds the potential for both human goodness and human evil. Another idea May explores is civilisation stemming out of rebellion (May, 1972).
+
+Paulus: Reminiscence of a Friendship[14] (1973)
+May identified Paul Tillich as one of his biggest influences and in this book May episodically recalls Tillich's life trying to focus just on the key moments over the eight chapters, taking a psychoanalytic approach to the tale (May, 1973)
+
+The Courage to Create (1975)[15]
+Listening to our ideas and helping form the structure of our world is what our creative courage can come from; this is the main direction of May in this book. May encourages that people break the pattern in their life and face their fears to reach their full potential (May, 1975).
+
+Freedom and Destiny (1981)[16]
+As the title suggests, May focuses on the area of Freedom and Destiny in this book. He examines what freedom might offer and also, comparatively, how destiny is imposing limitations on us, but also how the two have an interdependence. May draws on artists and poets and others to invoke what he is saying (May, 1981).
+
+The Discovery of Being: Writings in Existential Psychology (1983)[17]
+May draws on others' perspectives, including Freud's, to go into more detail on existential psychotherapy. Another topic May examines is how Psychoanalyses and Existentialism may have come from similar areas of thinking. There is attention paid to searching for stability with strong feelings of anxiety (May, 1983).
+
+My Quest for Beauty (1985)
+Serving as a type of memoir, May discusses his own opinions on the power of beauty. He also states his belief that beauty must be both understood and also valued in the world (May, 1985).[18]
+
+The Cry for Myth (1991)[19]
+Argued in this book is May's belief that humans can use myths to help them make sense of their lives, based on case studies May uses from his patients. May discusses how this could be particularly useful to those who need direction in a confusing world (May, 1991).
+
+The Psychology of Existence (1995)[20]
+Two days before May's death, he edited an advanced copy of this book. It was co-authored by Kirk Schneider and was intended to bring some life back into existential psychology. Like some previous books, this talks of existential psychotherapy and targets scholars (May & Schneider, 1995).
+
+Accomplishments
+In 1970, May's most popular work, Love and Will (1969), won the Ralph Waldo Emerson Award for humane scholarship and became a best-seller.[21]
+In 1971, May won the American Psychological Association's Distinguished Contribution to Science and Profession of Clinical Psychology award.
+In 1972, the New York Society of Clinical Psychologists presented him with the Dr. Martin Luther King, Jr., Award for his book Power and Innocence (1972).
+In 1987, he received the American Psychological Foundation Gold Medal Award for Lifetime Contributions to Professional Psychology.
+Influences and psychological background
+May was influenced by North American humanism and interested in reconciling existential psychology with other philosophies, especially Freud's.
+
+May considered Otto Rank (1884–1939) to be the most important precursor of existential therapy. Shortly before his death, May wrote the foreword to Robert Kramer's edited collection of Rank's American lectures. "I have long considered Otto Rank to be the great unacknowledged genius in Freud's circle", wrote May.[22]
+
+May is often grouped with humanists, for example Abraham Maslow, who provided a good base for May's studies and theories as an existentialist. May delves further into the awareness of the serious dimensions of a human's life than Maslow did.
+
+Erich Fromm had many ideas with which May agreed relating to May's existential ideals. Fromm studied the ways people avoid anxiety by conforming to societal norms rather than doing what they please. Fromm also focused on self-expression and free will, on all of which May based many of his studies.
+
+May was Irvin D. Yalom's therapist.[23]
+
+Stages of development
+Like Freud, May defined certain "stages" of development. These stages are not as strict as Freud's psychosexual stages, rather they signify a sequence of major issues in each individual's life:
+
+Innocence – the pre-egoic, pre-self-conscious stage of the infant: An innocent is only doing what he or she must do. However, an innocent does have a degree of will in the sense of a drive to fulfill needs.
+Rebellion – the rebellious person wants freedom, but does not yet have a good understanding of the responsibility that goes with it.
+Ordinary – the normal adult ego learned responsibility, but finds it too demanding, so seeks refuge in conformity and traditional values.
+Creative – the authentic adult, the existential stage, self-actualizing and transcending simple egocentrism
+The stages of development that Rollo May set out are not stages in the conventional sense (not in the strict Freudian sense) i.e. both children and adults can present qualities from these stages at different times.
+
+Perspectives
+Anxiety
+In May's book The Meaning of Anxiety, he defined anxiety as "the apprehension cued off by a threat to some value which the individual holds essential to his existence as a self" (1967, p. 72). He quoted Kierkegaard: "Anxiety is the dizziness of freedom". May's interest in anxiety as a result of isolation grew while he was placed in a sanatorium for tuberculosis treatment. There, he saw patients exhibiting fear and anxiety that seemed to be linked to depersonalization and isolation.
+
+From that experience, May concluded that anxiety is essential for individual growth. It is something that we cannot escape, thus we must use anxiety to develop our humanity and freely live a life of dignity.[26]
+
+He believed that the feelings of threat and powerlessness associated with anxiety motivated humans to exercise freedom to act courageously instead of conforming to the comforts of modern life. Ultimately, anxiety created the opportunity for humans to live life to the fullest (Friedman). Additionally, May proposed that internalizing anxiety as fear could reduce overall anxiety because, “anxiety seeks to become fear”. He claimed that shifting anxiety to a fear incentivized avoiding a feared object or removing the fear of the object.[26]
+
+Love
+May's thoughts on love are documented in his book Love and Will, which addressed love and sex in human behavior. He believed that society separated love and sex into two different ideologies when they should be classified as one. May identified five types of love:
+
+Libido: Biological function that can be satisfied through sexual intercourse or some other release of sexual tension.
+Eros: Psychological desire that seeks procreation or creation through an enduring union with a loved one.
+Philia: Intimate non-sexual friendship between two people.
+Agape: Esteem for the other, the concern for the other's welfare beyond any gain that one can get out of it, disinterested love, typically, the love of God for man.
+Manic: Impulsive, emotionally driven love. Feelings are very hot and cold. The relationship transitions between thriving and perfect, or bitter and ugly.
+May investigated and criticized the "Sexual Revolution" in the 1960s, when individuals began to explore their sexuality. The term Free Sex replaced the ideology of free love. May postulated that love is intentionally willed by an individual; love reflects human instinct for deliberation and consideration. May then explained that giving in to sexual impulses did not actually make an individual free; freedom came from resisting sexual impulses. Unsurprisingly, May believed that Hippie counterculture as well as commercialization of sex and pornography influenced society to perceive a disconnect between love and sex. Because emotion had separated from reason, it became socially acceptable to seek sexual relationships while avoiding the natural drive to relate to another person and create new life. May believed that sexual freedom caused modern society to neglect important psychological developments such as the importance of caring.
+
+Guilt
+According to May, guilt occurs when people deny their potentialities, fail to perceive the needs of others or are unaware of their dependency on the world. Both anxiety and guilt include issues dealing with one's existence in the world. May mentioned they were ontological, meaning that they both refer to the nature of being and not to the feelings coming from situations. (Feist & Feist, 2008)[26]
+
+Feist and Feist (2008) outline May's three forms of ontological guilt. Each form relates to one of the three modes of being, which are Umwelt, Mitwelt and Eigenwelt. Umwelt's form of guilt comes from a lack of awareness of one's existence in the world, which May believed to take place when the world becomes more technologically advanced, and people are less concerned about nature and become removed from nature.
+
+Mitwelt's form of guilt comes from failure to see things from other's point of view. Because we cannot understand the need of others accurately, we feel inadequate in our relations with them.
+
+Eigenwelt's form of guilt is connected with the denial of our own potentialities or failure to fulfil them. This guilt is based in our relationship with the self. This form of guilt is universal because no one can completely fulfil their potentialities.
+
+Criticism of modern psychotherapy
+May believed that psychotherapists towards the end of the 20th century had fractured away from the Jungian, Freudian and other influencing psychoanalytic thought and started creating their own 'gimmicks' causing a crisis within the world of psychotherapy. These gimmicks were said to put too much stock into the self where the real focus needed to be looking at 'man in the world'. To accomplish this, May pushed for the use of existential therapy over individually created techniques for psychotherapy.[27]
+
+May believed that modern psychotherapy in the late 20th century was branching away from its original founders: Freud, Jung, Rank, and Adler. May believed that modern psychotherapy isolated and ‘cured’ specific patient symptoms, called gimmicks. Typically, gimmicks are minor problems, not deep psychological issues, that emphasize the self. Ultimately, treating gimmicks puts the patient at a disadvantage by giving them a short-lasting fix, while distracting patients from their real problems. May also speculated that therapists become bored after two to three years of treating gimmicks which lead them to create more gimmicks. Dramatically, May believed that gimmicks were designed to destroy modern society. In fact, May postulated that the work of many great philosophers is no longer relevant because they focused on gimmicks.[27]
+
+Thus, May postulated that existential psychotherapy was the future of therapy. Existential psychotherapy aligned with the ideas of Freud, Jung, Rank, and Adler, who sought to bring the unconscious to the conscious. The conscious developed between age one and two, with the unconscious lying at the outer reaches of the conscious. Thus, existential psychotherapy helped patients to hone their mental capacities, allowing them to internalize their experiences; typically, in a more sensitive and intellectual manner. Existential psychotherapy also emphasized natural concepts like death, love, fear which relates to how individuals can fit into the world around them.[27]
+
+Unconstructive trends in existential psychology [28]
+In 1961, approximately two years after existential psychology became a recognized domain of psychology, Rollo May voiced his critiques of the ever-growing field. He identified concepts that he believed would hinder the profession as it developed, he called these unconstructive trends. May identified five unconstructive trends:
+
+The idea the existential psychology could not be specialized to a particular group
+Existential psychology is not a form of therapy
+Existential psychology is not the same as Zen Buddhism
+The anti-scientific tendencies of existential psychiatry
+The widespread “wild eclecticism” would ruin modern therapy
+First, May disliked the idea that existential psychology could be specialized to a particular school or group, namely the Ontoanalytic Society. This society analyzed what it meant to be human, or at least they tried to, which May believed would damage existential psychology. Not only was it empirically impossible to quantify, but it was also immoral to attempt. This analysis technique rationalized individual guilt so that the individual could feel relieved from whatever was troubling them; ultimately, May believed this process was removing the humility from the human experience. May's second unconstructive trend, which builds on first, emphasized that existential psychology is not a system of therapy. Rather it is an attitude towards human beings. Existential psychology seeks to understand the structure of human beings and their experiences.
+
+Third, May believed the association of existential psychology with Zen Buddhism downplayed the significant differences between these two practices. Existential psychology brings awareness of existential problems like anxiety, tragedy, guilt, and the reality of evil.  Attempting to bypass these problems using Zen Buddhist techniques would cause loss of the sense of self and loss of confidence in capacity for free will. May believed that if we face problems head on, using existential psychology, then we make peace with them and assign them meaning.
+
+Fourth, May detested the anti-scientific tendencies of psychologists practicing existential psychiatry. Such tendencies became popular alongside America's anti-intellectualism; a time period when distrust of reason was widespread. May argued against this, stating that science is a part of the universe, therefore, we must accept it.
+
+Finally, May suggested the increase in “wild eclecticism” would ruin therapeutic practice. May believed wild eclecticism overemphasized therapeutic techniques (gimmicks) leading other existentialists to conclude that therapeutic techniques were unimportant to the therapy process. Conversely, May advocated for therapeutic techniques, as long as they held clear presuppositions, and were administered in an undogmatic manner because therapy was meant to be objective.
+
+Constructive trends in existential psychology[28]
+May also evaluated constructive trends in existential psychology, which May believed would further the understanding of existential psychology. May identified five constructive trends in existential psychology:
+
+Science's new approach to the study of man
+The central role of decision making in the human experience
+The problem of the ego
+How the senses are recognized as connecting man and the material world
+The concept of normal anxiety and normal guilt
+First, May criticized science's new approach to the study of man. At that time, science focused heavily on the drives and forces that motivated human beings. Existential psychology, on the other hand, sought to evaluate whole human beings and their experiences. May believed existentialists should focus on the man to whom a drive or force is happening and the subsequent experiences of acting willfully. In this manner, May hoped that existentialists would better understand anxiety, despair and other existential problems which rely on the totality of human experiences.
+
+Second, May appreciated the central role of decision making in human experience. May perceived decision making as an inherent act of the centered self. Decisions cannot be made without consciousness, thus creating the experience freedom of choice. The act of assigning value was a distinct human characteristic.
+
+Third, May evaluated the problem of the ego. Many psychologists assumed that the existential ego was associated with the psychoanalytical ego, which was false. May theorized that the existential ego worked alongside two other aspects, known as the aspects of the existing person. These aspects identify the self, the subjective center where personal bias is shaped by experience; the person, the social center where we can relate with other people; and the ego, our individual perception of how the self relates to the person.
+
+May's final two constructive trends were less developed than his other trends. Simply, May agreed with two shifting paradigms within the psychology world. First, May liked how Dr. Erwin Straus identified the senses as a relationship between man and the world. Up until Dr. Straus's work, Pavlovian and Freudian ideologies of the western world insisted that the sense separated man from the natural world. Next, May praised the acceptance of normal anxiety within psychology. May, however, also emphasized the need to accept normal guilt. May believed that normal guilt heavily contributed to feelings of worthlessness. If not treated, neurotic guilt could occur.
+    """
+
+    summary_template = """
+    given the information {information} about a person I want you to create (using Chinese):
+    1. A short summary
+    2. two interesting facts about them
+    """
+
+    summary_prompt_template = PromptTemplate(
+        input_variables=["information"], template=summary_template
+    )
+
+    llm = ChatOpenAI(temperature=0, model="gpt-5")
+    # llm = ChatOllama(temperature=0, model="gemma3:270m")
+    chain = summary_prompt_template | llm
+    response = chain.invoke(input={"information": information})
+    print(response.content)
+    
 
 if __name__ == "__main__":
     main()
